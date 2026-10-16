@@ -1,13 +1,13 @@
 .section .text
 .global _start
+.equ UART, 0x10000000
 #right now it just writes hi and loops
 _start:
-    li   t0, 0x10000000    # UART adress
-    li   t1, 72              # 'H'
-    sb   t1, 0(t0)
+    li   t0, 72              # 'H'
+    sb   t0, UART
 
-    li   t1, 105             # 'i'
-    sb   t1, 0(t0)
+    li   t0, 105             # 'i'
+    sb   t0, UART
 
 loop:
     j loop
