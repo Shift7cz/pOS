@@ -1,0 +1,4 @@
+[ASM]
+> bootloader/boot.s
+[LINKER]
+> bootloader/linker.ld
