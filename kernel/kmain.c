@@ -3,17 +3,18 @@
 #define INPUT_BUFFER_SIZE 64
 
 int dummyCommands(char str[]) {
-    if (strcmp(str, "sayhello")) {
+    if (strEq(str, "sayhello")) {
         uartPuts("\n\"Hello World!\"\n");
         return 0; // means continue
     }
-    else if (strcmp(str, "exit")) {
+    else if (strEq(str, "exit")) {
         uartPuts("\nExiting...\n");
         return 1; // means shutdown
     }
     // etc
     else {
         uartPuts("\nUnknown command\n");
+        return 0;
     }
 }
 
@@ -26,7 +27,7 @@ void kmain(void) {
     while (1) {
         char c = uartGetc();
 
-        if (c == '\r') {
+        if (c == '\r' || c == '\n') {
             int msg = dummyCommands(inputBuffer);
 
             if (msg == 1) {
@@ -39,14 +40,17 @@ void kmain(void) {
             }
             count = 0;
         }
-        // else if (c == 0x7F || c == 0x08) { // backspace not working properly for some reson idk how to do backspace
-        //     count--;
-        //     inputBuffer[count] = '\0';
-        // }
+        else if (c == 0x7F || c == 0x08) { // backspace not working properly for some reson idk how to do backspace
+            if (count > 0) {
+                count--;
+                inputBuffer[count] = '\0';
+                uartPuts("\b \b"); // Deletes previous character
+            }
+        }
         else {
             inputBuffer[count] = c;
 
-            if (count == INPUT_BUFFER_SIZE) { // prevents overflow
+            if (count == INPUT_BUFFER_SIZE - 1) { // prevents overflow
                 uartPuts("\nInput buffer full\n");
                 for (int i = 0; i < INPUT_BUFFER_SIZE; i++) {
                     inputBuffer[i] = 0; // resets input buffer to '\0'
@@ -57,8 +61,9 @@ void kmain(void) {
                 count++;
                 inputBuffer[count] = '\0';
             }
-
-            uartPutc(c); // writes back what the user wrote
+            if (c >= 32 && c < 127) {
+                uartPutc(c); // writes back what the user wrote, if its a letter
+            }
         }
     }
 }
