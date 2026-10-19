@@ -2,3 +2,5 @@
 > bootloader/boot.s
 [LINKER]
 > bootloader/linker.ld
+[C]
+> kernel/kmain.c

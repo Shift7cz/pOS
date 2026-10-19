@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 
     // load
     std::ifstream file("config.pos");
-    if (!file) { std::cerr << "can't read kernel.proj\n"; return 1; }
+    if (!file) { std::cerr << "can't read project\n"; return 1; }
     std::stringstream buffer;
     buffer << file.rdbuf();
     std::string project = buffer.str();
