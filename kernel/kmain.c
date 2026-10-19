@@ -2,9 +2,14 @@
 #include "string.h"
 #define INPUT_BUFFER_SIZE 64
 
-void dummyCommands(char str[]) {
-    if (strcmp(str, "tst")) {
+int dummyCommands(char str[]) {
+    if (strcmp(str, "sayhello")) {
         uartPuts("\n\"Hello World!\"\n");
+        return 0; // means continue
+    }
+    else if (strcmp(str, "exit")) {
+        uartPuts("\nExiting...\n");
+        return 1; // means shutdown
     }
     // etc
     else {
@@ -22,13 +27,22 @@ void kmain(void) {
         char c = uartGetc();
 
         if (c == '\r') {
-            dummyCommands(inputBuffer);
+            int msg = dummyCommands(inputBuffer);
+
+            if (msg == 1) {
+                uartPuts("[![FAKE SHUTDOWN]]!"); // idk how to quit properly
+                return;
+            } // etc, this can also be a switch
 
             for (int i = 0; i < INPUT_BUFFER_SIZE; i++) {
                 inputBuffer[i] = 0; // resets input buffer to '\0'
             }
             count = 0;
         }
+        // else if (c == 0x7F || c == 0x08) { // backspace not working properly for some reson idk how to do backspace
+        //     count--;
+        //     inputBuffer[count] = '\0';
+        // }
         else {
             inputBuffer[count] = c;
 
