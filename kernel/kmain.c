@@ -1,29 +1,9 @@
 #include "uart.h"
-#include "string.h"
+#include "command.h"
 #define INPUT_BUFFER_SIZE 64
 
 void kmain(void); // kmain at the top o it cna be accessed
 
-int dummyCommands(char str[]) {
-    if (strEq(str, "sayhello")) {
-        uartPuts("\n\"Hello World!\"\n");
-        return 0; // means continue
-    }
-    if (strEq(str, "exit")) {
-        uartPuts("\nExiting...\n");
-        return 1; // means shutdown
-    }
-    if (strEq(str, "addr")) {
-        uartPuts("\nAddress of kmain is: ");
-        uartPutHex((unsigned long)kmain); // gets the adress of kmain in ram
-        uartPuts("\n");
-        return 0;
-    }
-    // etc
-
-    uartPuts("\nUnknown command\n");
-    return 0;
-}
 
 void kmain(void) {
     uartPuts("\nWelcome to pOS!!!\n"); // "" annotation automatically adds \0
@@ -32,11 +12,12 @@ void kmain(void) {
     char inputBuffer[INPUT_BUFFER_SIZE] = {0}; // 64 byte input buffer filled with '\0'
     int count = 0; // current position in the input buffer
 
+    uartPuts("> ");
     while (1) {
         char c = uartGetc();
 
         if (c == '\r' || c == '\n') {
-            int msg = dummyCommands(inputBuffer);
+            int msg = runCommand(inputBuffer);
 
             if (msg == 1) {
                 uartPuts("[![FAKE SHUTDOWN]]!"); // idk how to quit properly
@@ -47,6 +28,7 @@ void kmain(void) {
                 inputBuffer[i] = 0; // resets input buffer to '\0'
             }
             count = 0;
+            uartPuts("> ");
         }
         else if (c == 0x7F || c == 0x08) { // backspace not working properly for some reson idk how to do backspace
             if (count > 0) {
@@ -64,6 +46,7 @@ void kmain(void) {
                     inputBuffer[i] = 0; // resets input buffer to '\0'
                 }
                 count = 0;
+                uartPuts("> ");
             }
             else {
                 count++;

@@ -6,3 +6,4 @@
 > kernel/kmain.c
 > kernel/uart.c
 > kernel/string.c
+> kernel/command.c
