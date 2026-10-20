@@ -2,24 +2,32 @@
 #include "string.h"
 #define INPUT_BUFFER_SIZE 64
 
+void kmain(void); // kmain at the top o it cna be accessed
+
 int dummyCommands(char str[]) {
     if (strEq(str, "sayhello")) {
         uartPuts("\n\"Hello World!\"\n");
         return 0; // means continue
     }
-    else if (strEq(str, "exit")) {
+    if (strEq(str, "exit")) {
         uartPuts("\nExiting...\n");
         return 1; // means shutdown
     }
-    // etc
-    else {
-        uartPuts("\nUnknown command\n");
+    if (strEq(str, "addr")) {
+        uartPuts("\nAddress of kmain is: ");
+        uartPutHex((unsigned long)kmain); // gets the adress of kmain in ram
+        uartPuts("\n");
         return 0;
     }
+    // etc
+
+    uartPuts("\nUnknown command\n");
+    return 0;
 }
 
 void kmain(void) {
     uartPuts("\nWelcome to pOS!!!\n"); // "" annotation automatically adds \0
+    uartPutc('\n');
 
     char inputBuffer[INPUT_BUFFER_SIZE] = {0}; // 64 byte input buffer filled with '\0'
     int count = 0; // current position in the input buffer

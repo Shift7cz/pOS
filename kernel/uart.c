@@ -22,3 +22,22 @@ void uartPuts(const char s[]) { // writes char s[]
         uartPutc(*s++);
     }
 }
+
+void uartPutHex(unsigned long hex) {
+    const char *digits = "0123456789abcdef";
+    uartPuts("0x");
+    _Bool hasStarted = 0;
+
+    for (int shift = 60; shift >= 0; shift -= 4) {
+        int i = (hex >> shift) & 0xF; // grabs 4 bits
+        char c = digits[i];
+
+        if (c == '0') {
+            if (hasStarted) uartPutc(c);
+        }
+        else {
+            if (!hasStarted) hasStarted = 1;
+            uartPutc(c);
+        }
+    }
+}
