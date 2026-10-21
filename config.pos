@@ -1,6 +1,6 @@
 [ASM]
 > bootloader/boot.s
-> bootloader/poweroff.s
+> kernel/poweroff.s
 [LINKER]
 > bootloader/linker.ld
 [C]
