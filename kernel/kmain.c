@@ -18,11 +18,8 @@ void kmain(void) {
 
         if (c == '\r' || c == '\n') {
             int msg = runCommand(inputBuffer);
-
-            if (msg == 1) {
-                uartPuts("[![FAKE SHUTDOWN]]!"); // idk how to quit properly
-                return;
-            } // etc, this can also be a switch
+            
+            // msg handling here
 
             for (int i = 0; i < INPUT_BUFFER_SIZE; i++) {
                 inputBuffer[i] = 0; // resets input buffer to '\0'

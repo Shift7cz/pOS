@@ -8,3 +8,4 @@
 > kernel/uart.c
 > kernel/string.c
 > kernel/command.c
+> kernel/asmCall.c

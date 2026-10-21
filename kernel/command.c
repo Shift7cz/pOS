@@ -1,6 +1,7 @@
 #include "command.h"
 #include "uart.h"
 #include "string.h"
+#include "asmCall.c"
 
 void kmain(void);
 
@@ -18,7 +19,8 @@ static int addrCmd(void) {
 
 static int poweroffCmd(void) {
     uartPuts("\nExiting...\n");
-    return 1; // means shutdown
+    shutdown();
+    return 0;
 }
 
 int runCommand(const char *line) {
